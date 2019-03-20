@@ -33,11 +33,11 @@ class TipoDocumento(models.Model):
 
 
 class Clientes(models.Model):
-    nombre_completo = models.CharField(black=False, null=False, max_length=150)
-    apellido_paterno = models.CharField(black=False, null=False, max_length=100)
-    apellido_materno = models.CharField(black=False, null=False, max_length=100)
-    direccion = models.CharField(black=False, null=False, max_length=100)
-    sexo = models.IntegerField(blank=False, null=False, choices=GENERO)
+    nombre_completo = models.CharField(blank=False, null=False, max_length=150)
+    apellido_paterno = models.CharField(blank=False, null=False, max_length=100)
+    apellido_materno = models.CharField(blank=False, null=False, max_length=100)
+    direccion = models.CharField(blank=False, null=False, max_length=100)
+    genero = models.CharField(blank=False, null=False, choices=GENERO, max_length=1)
     numero_documento = models.CharField(blank=False, null=False, max_length=12)
     tipo_documento = models.ForeignKey(TipoDocumento, on_delete=False)
 
@@ -46,4 +46,9 @@ class Producto(models.Model):
     nombre = models.CharField(blank=False, null=False, max_length=100)
     descripcion = models.CharField(blank=False, null=False, max_length=200)
     fecha_creacion = models.DateTimeField(auto_now=datetime.datetime.now())
-    cliente = models.ManyToManyField(Clientes)
+    cliente = models.ManyToManyField(Clientes, blank=True, related_name='products', through="ProductCliente")
+
+
+class ProductCliente(models.Model):
+    cliente = models.ForeignKey(Clientes, on_delete=models.CASCADE)
+    producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
